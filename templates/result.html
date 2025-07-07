@@ -1,0 +1,246 @@
+{% extends "base.html" %}
+{% block title %}AI Resume Match Results - HireScore Analytics{% endblock title %}
+
+{% block content %}
+<div class="container my-5">
+  <!-- Header with Better Visual Hierarchy -->
+  <div class="text-center mb-5">
+    <h1 class="display-5 fw-bold text-primary mb-3">HireScore Analytics</h1>
+    <p class="lead text-muted">AI-powered resume analysis completed</p>
+  </div>
+
+  <!-- Enhanced Summary Banner -->
+  <div class="row mb-5">
+    <div class="col-md-8 mx-auto">
+      <div class="card spinner-border-sm rounded shadow-lg text-dark bg-light">
+        <div class="card-body text-center p-4">
+          <h3 class="mb-3">📊 Analysis Summary</h3>
+          <div class="row">
+            <div class="col-md-4">
+              <div class="display-6 mb-2">{{ total_resumes }}</div>
+              <small>Resume{{ 's' if total_resumes != 1 else '' }} Analyzed</small>
+            </div>
+            {% if total_resumes > 1 %}
+            <div class="col-md-4">
+              <div class="display-6 mb-2">{{ results[0].match_score }}%</div>
+              <small>Best Match Score</small>
+            </div>
+            <div class="col-md-4">
+              <div class="display-6 mb-2">🏆</div>
+              <small>Auto-Ranked</small>
+            </div>
+            {% else %}
+            <div class="col-md-4">
+              <div class="display-6 mb-2">{{ results[0].match_score }}%</div>
+              <small>Match Score</small>
+            </div>
+            <div class="col-md-4">
+              <div class="display-6 mb-2">⚡</div>
+              <small>Instant Results</small>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Comparison Analysis (Enhanced) -->
+  {% if comparison_analysis %}
+  <div class="card shadow-lg mb-5 border-0">
+    <div class="card-header bg-warning text-dark text-center py-3">
+      <h3 class="mb-0">🏆 Smart Ranking & Comparison</h3>
+      <small class="text-muted">AI-powered candidate comparison</small>
+    </div>
+    <div class="card-body bg-light">
+      <div style="max-height: 400px; overflow-y: auto;">
+        <pre class="mb-0 lh-lg" style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; white-space: pre-wrap; font-size: 0.95rem;">{{ comparison_analysis }}</pre>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Individual Resume Results (Enhanced) -->
+  {% for result in results %}
+  <div class="card shadow-lg mb-4 border-0 {% if loop.index == 1 and total_resumes > 1 %}border-start border-success border-4{% elif loop.index == total_resumes and total_resumes > 1 %}border-start border-danger border-4{% endif %}">
+    
+    <!-- Enhanced Resume Header -->
+    <div class="card-header {% if loop.index == 1 and total_resumes > 1 %}bg-success{% elif loop.index == total_resumes and total_resumes > 1 %}bg-danger{% else %}bg-primary{% endif %} text-white">
+      <div class="d-flex justify-content-between align-items-center">
+        <h4 class="mb-0">
+          {% if total_resumes > 1 %}
+            {% if loop.index == 1 %}
+              🥇 #{{ loop.index }} - {{ result.filename }}
+            {% elif loop.index == 2 %}
+              🥈 #{{ loop.index }} - {{ result.filename }}
+            {% elif loop.index == 3 %}
+              🥉 #{{ loop.index }} - {{ result.filename }}
+            {% else %}
+              📄 #{{ loop.index }} - {{ result.filename }}
+            {% endif %}
+          {% else %}
+            📄 {{ result.filename }}
+          {% endif %}
+        </h4>
+        
+        {% if total_resumes > 1 %}
+          {% if loop.index == 1 %}
+            <span class="badge bg-light text-success fs-6 px-3 py-2">🎯 TOP CANDIDATE</span>
+          {% elif loop.index == total_resumes %}
+            <span class="badge bg-light text-danger fs-6 px-3 py-2">❌ LOWEST MATCH</span>
+          {% else %}
+            <span class="badge bg-light text-warning fs-6 px-3 py-2">⚡ GOOD MATCH</span>
+          {% endif %}
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="card-body p-4">
+      {% if result.match_score is not none %}
+      <!-- Enhanced Circular Progress -->
+      <div class="row mb-4">
+        <div class="col-md-3 text-center">
+          <div class="position-relative d-inline-block">
+            <svg width="120" height="120" class="circular-progress">
+              <circle cx="60" cy="60" r="50" fill="none" stroke="#e9ecef" stroke-width="8"/>
+              <circle cx="60" cy="60" r="50" fill="none" 
+                      stroke="{% if result.match_score >= 80 %}#28a745{% elif result.match_score >= 60 %}#ffc107{% else %}#dc3545{% endif %}" 
+                      stroke-width="8" 
+                      stroke-linecap="round"
+                      stroke-dasharray="314" 
+                      stroke-dashoffset="{{ 314 - (result.match_score * 314 / 100) }}"
+                      transform="rotate(-90 60 60)"/>
+            </svg>
+            <div class="position-absolute top-50 start-50 translate-middle text-center">
+              <div class="h3 mb-0 fw-bold">{{ result.match_score }}%</div>
+              <small class="text-muted">Match</small>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-9">
+          <div class="row h-100 align-items-center">
+            <div class="col-md-4 text-center">
+              <div class="h4 mb-1">
+                {% if result.match_score >= 80 %}🎯{% elif result.match_score >= 60 %}⚡{% else %}❌{% endif %}
+              </div>
+              <div class="fw-bold">
+                {% if result.match_score >= 80 %}Excellent Fit
+                {% elif result.match_score >= 60 %}Good Match
+                {% else %}Poor Match
+                {% endif %}
+              </div>
+            </div>
+            <div class="col-md-4 text-center">
+              <div class="h4 mb-1">📊</div>
+              <div class="fw-bold">AI Analyzed</div>
+            </div>
+            <div class="col-md-4 text-center">
+              <div class="h4 mb-1">
+                {% if total_resumes > 1 %}🏆{% else %}✅{% endif %}
+              </div>
+              <div class="fw-bold">
+                {% if total_resumes > 1 %}Ranked{% else %}Complete{% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+
+      <!-- Enhanced AI Feedback -->
+      <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header bg-light">
+          <h5 class="mb-0">🤖 AI Analysis Report</h5>
+        </div>
+        <div class="card-body">
+          <div style="max-height: 300px; overflow-y: auto;">
+            <pre class="mb-0 lh-lg" style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; white-space: pre-wrap; font-size: 0.9rem;">{{ result.ai_feedback }}</pre>
+          </div>
+        </div>
+      </div>
+
+      <!-- Enhanced Collapsible Section -->
+      <div class="accordion" id="accordion{{ loop.index }}">
+        <div class="accordion-item border-0 shadow-sm">
+          <h2 class="accordion-header" id="heading{{ loop.index }}">
+            <button class="accordion-button collapsed bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ loop.index }}" aria-expanded="false" aria-controls="collapse{{ loop.index }}">
+              <span class="fw-bold">📋 View Source Documents</span>
+              <small class="text-muted ms-2">(Job Description & Resume Text)</small>
+            </button>
+          </h2>
+          <div id="collapse{{ loop.index }}" class="accordion-collapse collapse" aria-labelledby="heading{{ loop.index }}" data-parent="#accordion{{ loop.index }}">
+            <div class="accordion-body">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="card border-0 shadow-sm mb-3">
+                    <div class="card-header bg-info text-white">
+                      <h6 class="mb-0">🎯 Job Requirements</h6>
+                    </div>
+                    <div class="card-body">
+                      <div style="max-height: 200px; overflow-y: auto;">
+                        <pre class="mb-0 small lh-lg" style="white-space: pre-wrap;">{{ job_desc }}</pre>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-secondary text-white">
+                      <h6 class="mb-0">📄 Resume Content</h6>
+                    </div>
+                    <div class="card-body">
+                      <div style="max-height: 200px; overflow-y: auto;">
+                        <pre class="mb-0 small lh-lg" style="white-space: pre-wrap;">{{ result.resume_text }}</pre>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+
+  <!-- Enhanced Action Buttons -->
+  <div class="text-center mt-5">
+    <div class="card border-0 shadow-sm bg-light">
+      <div class="card-body p-4">
+        <h5 class="text-primary mb-3">Ready for More Analysis?</h5>
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+          <button onclick="window.scrollTo(0,0)" class="btn btn-outline-secondary">
+            ⬆️ Back to Top
+          </button>
+          <a href="/" class="btn btn-primary">
+            🔄 Analyze New Resumes
+          </a>
+          <button onclick="window.print()" class="btn btn-outline-primary">
+            🖨️ Print Report
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+.circular-progress {
+  transform: rotate(-90deg);
+}
+
+.circular-progress circle {
+  transition: stroke-dashoffset 0.8s ease;
+}
+
+@media print {
+  .btn, .accordion-button {
+    display: none !important;
+  }
+}
+</style>
+
+<!-- Bootstrap JS for accordion functionality -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+{% endblock content %}

@@ -1,0 +1,181 @@
+{% extends "base.html" %}
+
+{% block title %}HireScore Analytics - AI Resume Scoring Platform{% endblock title %}
+
+{% block content %}
+
+    <!-- Hero Section with Gradient -->
+    <div class="hero-gradient py-5">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <h1 class="display-4 fw-bolder mb-3 text-primary" style="font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;">
+                        HireScore Analytics
+                    </h1>
+                    <p class="lead text-black/30 mb-4">
+                        AI-powered resume scoring and ranking platform that helps hiring managers make smarter decisions in seconds.
+                    </p>
+                    <div class="d-flex gap-3 mb-4">
+                        <div class="badge bg-light text-dark px-3 py-2">📊 AI Analysis</div>
+                        <div class="badge bg-light text-dark px-3 py-2">🏆 Smart Ranking</div>
+                        <div class="badge bg-light text-dark px-3 py-2">⚡ Instant Results</div>
+                    </div>
+                </div>
+                <div class="col-lg-6 text-center">
+                    <div class="bg-black/5 p-2 rounded shadow-lg">
+                        <h5 class="text-primary mb-3">⚡ Quick Demo</h5>
+                        <div class="row text-center">
+                            <div class="col-4">
+                                <div class="display-6 text-success">📄</div>
+                                <small class="text-muted">Upload Resume</small>
+                            </div>
+                            <div class="col-4">
+                                <div class="display-6 text-warning">🤖</div>
+                                <small class="text-muted">AI Analysis</small>
+                            </div>
+                            <div class="col-4">
+                                <div class="display-6 text-primary">📊</div>
+                                <small class="text-muted">Get Score</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Upload Form Section -->
+    <div class="container mt-5" id="upload-form">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card shadow-lg border-0">
+                    <div class="card-header bg-primary text-white text-center">
+                        <h3 class="mb-0">📊 Upload & Analyze Resumes</h3>
+                    </div>
+                    <div class="card-body p-4">
+                        <form action="/analyze" method="POST" enctype="multipart/form-data" onsubmit="showLoading()">
+                            
+                            <div class="mb-4">
+                                <label class="form-label fw-bold text-dark">
+                                    <span class="badge bg-primary me-2">1</span>📄 Upload Resume(s) (.pdf):
+                                </label>
+                                <input class="form-control form-control-lg" type="file" name="resume" accept=".pdf" multiple required>
+                                <div class="form-text">
+                                    <span class="text-success">💡 Pro Tip:</span> Upload multiple resumes to compare and rank them automatically!
+                                </div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label fw-bold text-dark">
+                                    <span class="badge bg-primary me-2">2</span>🎯 Job Description:
+                                </label>
+                                <textarea class="form-control" rows="8" name="job_desc" 
+                                         placeholder="Paste the complete job description here including requirements, skills, and responsibilities..." 
+                                         required></textarea>
+                                <div class="form-text">
+                                    <span class="text-success">📝 Better Input = Better Results:</span> Include all requirements, skills, and responsibilities
+                                </div>
+                            </div>
+
+                            <div class="d-grid">
+                                <button class="btn btn-primary btn-lg" type="submit">
+                                    <span class="btn-text">🚀 Generate HireScore Report</span>
+                                    <span class="loading-text d-none">
+                                        <span class="spinner-border spinner-border-sm me-2"></span>
+                                        Processing...
+                                    </span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-12 text-center mb-4">
+                <h2 class="fw-bold text-primary">Why Choose HireScore Analytics?</h2>
+                <p class="text-muted">Built for modern hiring teams who need data-driven insights</p>
+            </div>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <div class="text-primary mb-3" style="font-size: 3rem;">🤖</div>
+                        <h5 class="fw-bold">AI-Powered Analysis</h5>
+                        <p class="text-muted">Advanced AI evaluates resume-job fit with detailed feedback and actionable insights</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <div class="text-primary mb-3" style="font-size: 3rem;">🏆</div>
+                        <h5 class="fw-bold">Smart Ranking</h5>
+                        <p class="text-muted">Automatically ranks multiple resumes from best to worst match with comparison analysis</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <div class="text-primary mb-3" style="font-size: 3rem;">📊</div>
+                        <h5 class="fw-bold">Detailed Insights</h5>
+                        <p class="text-muted">Get match percentages, strengths, weaknesses, and hiring recommendations</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- About Project Section -->
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="card bg-light border-0">
+                    <div class="card-body p-4">
+                        <h4 class="text-center mb-4 text-primary">🛠️ About This Project</h4>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6 class="fw-bold">Tech Stack:</h6>
+                                <div class="d-flex flex-wrap gap-2 mb-3">
+                                    <span class="badge bg-primary">Python</span>
+                                    <span class="badge bg-primary">Flask</span>
+                                    <span class="badge bg-primary">Google Gemini AI</span>
+                                    <span class="badge bg-primary">PDFPlumber</span>
+                                    <span class="badge bg-primary">Bootstrap</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <h6 class="fw-bold">Features:</h6>
+                                <ul class="list-unstyled">
+                                    <li>✅ Multi-resume batch processing</li>
+                                    <li>✅ AI-powered matching algorithm</li>
+                                    <li>✅ Automated ranking system</li>
+                                    <li>✅ Detailed comparison reports</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showLoading() {
+            const btnText = document.querySelector('.btn-text');
+            const loadingText = document.querySelector('.loading-text');
+            const submitBtn = document.querySelector('button[type="submit"]');
+            
+            btnText.classList.add('d-none');
+            loadingText.classList.remove('d-none');
+            submitBtn.disabled = true;
+        }
+    </script>
+
+{% endblock content %}
