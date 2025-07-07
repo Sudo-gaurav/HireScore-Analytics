@@ -50,7 +50,8 @@ python app.py
 ```
 
 ## 🌍 Live
-
-
+```bash
+https://hirescore-analytics.onrender.com
+```
 ## 🪪 License
 This project is open-source under the [Apache-2.0 license](LICENSE).
